@@ -41,15 +41,27 @@ export default function Page() {
           <Button onClick={handleNewTransaction}>Nova transação</Button>
         </div>
 
-        {weekDays.map((day) => (
-          <div className='flex flex-col gap-2' key={day.currentDate.toString()}>
-            <div className='bg-zinc-100 p-4 rounded-md'>
-              <h1>{day.text}</h1>
-            </div>
+        {weekDays.map((day) => {
+          const dayResult = result?.transactions.filter((r) => {
+            const payAtDay = r.payAt.toISOString().split('T')[0];
+            const currentDay = day.currentDate.toISOString().split('T')[0];
 
-            <TransactionTable date={day.currentDate} />
-          </div>
-        ))}
+            return payAtDay === currentDay;
+          });
+
+          return (
+            <div
+              className='flex flex-col gap-2'
+              key={day.currentDate.toString()}
+            >
+              <div className='bg-zinc-100 p-4 rounded-md'>
+                <h1>{day.text}</h1>
+              </div>
+
+              <TransactionTable result={dayResult} date={day.currentDate} />
+            </div>
+          );
+        })}
       </main>
     </div>
   );
