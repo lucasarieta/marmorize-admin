@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DocumentType {
+  CPF
+  CNPJ
+}
+
+enum CreditorType {
+  SUPPLIER
+  SERVICES
+  TAXES
+  EMPLOYEES
+  BANKS
+  OTHER
+}
+
+enum SpendingStatus {
+  PENDING
+  PAID
+}
+
+model Creditor {
+  id           String       @id @default(cuid())
+  name         String
+  document     String
+  documentType DocumentType @default(CPF)
+  type         CreditorType
+
+  createdAt DateTime   @default(now())
+  Spending  Spending[]
+
+  @@map("creditors")
+}
+
+model Spending {
+  id     String         @id @default(cuid())
+  amount Decimal
+  type   SpendingStatus @default(PENDING)
+
+  creditor   Creditor @relation(fields: [creditorId], references: [id])
+  creditorId String
+
+  expiresAt DateTime
+  payAt     DateTime
+
+  text String?
+
+  @@map("spendings")
+}

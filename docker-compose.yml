@@ -1,0 +1,9 @@
+services:
+  database:
+    image: bitnami/postgresql
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRESQL_USERNAME=marmorize
+      - POSTGRESQL_PASSWORD=marmorize
+      - POSTGRESQL_DATABASE=marmorize
