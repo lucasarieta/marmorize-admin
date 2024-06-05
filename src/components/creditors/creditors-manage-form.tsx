@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2Icon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { Button } from '../ui/button';
 import { Form } from '../ui/form';
@@ -66,7 +67,7 @@ export default function CreditorsManageForm({ creditor, isEditing }: Props) {
       );
 
       if (!data) {
-        alert(`Erro ao atualizar credor: ${message}`);
+        toast.error(`Erro ao atualizar credor: ${message}`);
         return;
       }
 
@@ -80,7 +81,7 @@ export default function CreditorsManageForm({ creditor, isEditing }: Props) {
     const { status, message, data } = await createCreditor(payload);
 
     if (!data) {
-      alert(`Erro ao criar credor: ${message}`);
+      toast.error(`Erro ao criar credor: ${message}`);
       return;
     }
 
@@ -114,8 +115,6 @@ export default function CreditorsManageForm({ creditor, isEditing }: Props) {
         } else {
           creditors.push(data);
         }
-
-        console.log(creditors);
 
         return {
           ...query,
