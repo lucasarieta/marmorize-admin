@@ -48,7 +48,7 @@ interface Props {
 export default function CreditorsManageForm({ creditor, isEditing }: Props) {
   const router = useRouter();
 
-  const form = useForm({
+  const form = useForm<ManageCreditorFormDto>({
     resolver: zodResolver(schema),
     defaultValues: isEditing && {
       name: creditor?.name,
