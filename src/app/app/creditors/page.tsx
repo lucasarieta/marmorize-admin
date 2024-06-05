@@ -90,7 +90,7 @@ export default function Page() {
                     colSpan={7}
                     className='py-10 text-center text-muted-foreground'
                   >
-                    œ Nenhum resultado encontrado.
+                    Nenhum resultado encontrado.
                   </TableCell>
                 </TableRow>
               )}

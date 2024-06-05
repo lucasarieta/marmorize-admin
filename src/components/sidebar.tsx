@@ -13,9 +13,9 @@ import { usePathname } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 
 const navigation = [
-  { name: 'Home', href: '/app', icon: HomeIcon },
+  { name: 'Overview', href: '/app', icon: HomeIcon },
   { name: 'Credores', href: '/app/creditors', icon: UsersIcon },
-  { name: 'Gastos', href: '/app/spendings', icon: CreditCardIcon },
+  { name: 'Transações', href: '/app/transactions', icon: CreditCardIcon },
 ];
 
 export default function Sidebar() {

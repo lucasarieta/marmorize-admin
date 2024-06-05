@@ -21,9 +21,14 @@ enum CreditorType {
   OTHER
 }
 
-enum SpendingStatus {
+enum TransactionStatus {
   PENDING
   PAID
+}
+
+enum TransactionOperations {
+  CREDIT
+  DEBIT
 }
 
 model Creditor {
@@ -33,24 +38,30 @@ model Creditor {
   documentType DocumentType @default(CPF)
   type         CreditorType
 
-  createdAt DateTime   @default(now())
-  Spending  Spending[]
+  createdAt   DateTime      @default(now())
+  Transaction Transaction[]
 
   @@map("creditors")
 }
 
-model Spending {
-  id     String         @id @default(cuid())
-  amount Decimal
-  type   SpendingStatus @default(PENDING)
-
+model Transaction {
+  id         String   @id @default(cuid())
   creditor   Creditor @relation(fields: [creditorId], references: [id])
   creditorId String
+
+  amount    Float
+  operation TransactionOperations
+  status    TransactionStatus     @default(PENDING)
+
+  transactionType String? @default("Boleto")
 
   expiresAt DateTime
   payAt     DateTime
 
+  payedAt   DateTime?
+  createdAt DateTime  @default(now())
+
   text String?
 
-  @@map("spendings")
+  @@map("transactions")
 }
