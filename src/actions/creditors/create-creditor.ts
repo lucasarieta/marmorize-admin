@@ -1,6 +1,6 @@
 'use server';
 
-import { ManageCreditorFormDto } from '@/app/app/creditors/manage/page';
+import { ManageCreditorFormDto } from '@/components/creditors/creditors-manage-form';
 import { getDocumentType, isDocumentValid } from '@/lib/document';
 import prisma from '@/lib/prisma';
 
