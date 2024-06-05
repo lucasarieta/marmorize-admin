@@ -48,6 +48,10 @@ export default function Page() {
     router.push(pathname + '?' + params.toString());
   }
 
+  function handleNewCreditor() {
+    router.push('/app/creditors/manage/new');
+  }
+
   return (
     <div className='flex flex-col gap-4'>
       <header className='flex items-center gap-2'>
@@ -58,7 +62,7 @@ export default function Page() {
       <main className='space-y-2.5'>
         <div className='flex items-center gap-2'>
           <CreditorsTableFilter />
-          <Button>Novo Credor</Button>
+          <Button onClick={handleNewCreditor}>Novo Credor</Button>
         </div>
 
         <div className='rounded-md border select-none'>

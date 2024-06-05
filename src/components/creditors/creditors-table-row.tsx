@@ -5,16 +5,17 @@ import { TableCell, TableRow } from '@/components/ui/table';
 import { getCreditorType } from '@/lib/creditor';
 import { PencilIcon } from '@heroicons/react/24/outline';
 import { Creditor } from '@prisma/client';
+import { useRouter } from 'next/navigation';
 
 export interface Props {
   creditor: Creditor;
 }
 
 export default function ({ creditor }: Props) {
-  // const navigate = useNavigate();
+  const router = useRouter();
 
   function edit() {
-    // navigate(`/customers/manage/${customer.id}`);
+    router.push(`/app/creditors/manage/${creditor.id}`);
   }
 
   return (

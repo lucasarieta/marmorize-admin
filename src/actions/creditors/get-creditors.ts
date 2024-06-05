@@ -1,10 +1,20 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { Creditor } from '@prisma/client';
 
 interface GetCreditorsDto {
   pageIndex: number;
   target?: string;
+}
+
+export interface GetCreditorsResponseDto {
+  creditors: Creditor[];
+  meta: {
+    pageIndex: number;
+    totalCount: number;
+    perPage: number;
+  };
 }
 
 export async function getCreditors({ pageIndex, target }: GetCreditorsDto) {

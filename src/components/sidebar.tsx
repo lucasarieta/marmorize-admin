@@ -23,7 +23,7 @@ export default function () {
     <nav className='h-full border-r flex flex-col px-5 py-8 gap-y-8'>
       <div className='flex items-center font-semibold gap-x-3 text-gray-700'>
         <BuildingOffice2Icon className='h-6 w-6 shrink-0' />
-        <h1>Sidebar</h1>
+        <h1>Marmoraria Schuler</h1>
       </div>
 
       <ul className='flex flex-col gap-2'>
