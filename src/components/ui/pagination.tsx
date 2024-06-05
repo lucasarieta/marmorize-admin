@@ -19,7 +19,9 @@ export function Pagination({
   perPage,
   onPageChange,
 }: PaginationProps) {
-  const pages = Math.floor(totalCount / perPage) || 1;
+  const pages = Math.ceil(totalCount / perPage) || 1;
+
+  console.log(pageIndex, pages);
 
   return (
     <div className='flex items-center justify-between'>

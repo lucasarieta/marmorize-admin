@@ -26,10 +26,11 @@ export default function Page() {
 
   const target = searchParams.get('target');
 
+  const page = searchParams.get('page');
   const pageIndex = z.coerce
     .number()
     .transform((page) => page - 1)
-    .parse(searchParams.get('page') ?? '1');
+    .parse(page ?? '1');
 
   const {
     data: result,
@@ -42,7 +43,7 @@ export default function Page() {
 
   function handlePaginate(page: number) {
     const params = new URLSearchParams(searchParams);
-    params.set('page', page.toString());
+    params.set('page', (page + 1).toString());
     params.delete('target');
 
     router.push(pathname + '?' + params.toString());
@@ -89,7 +90,7 @@ export default function Page() {
                     colSpan={7}
                     className='py-10 text-center text-muted-foreground'
                   >
-                    Nenhum resultado encontrado.
+                    œ Nenhum resultado encontrado.
                   </TableCell>
                 </TableRow>
               )}

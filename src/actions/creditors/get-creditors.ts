@@ -34,7 +34,7 @@ export async function getCreditors({ pageIndex, target }: GetCreditorsDto) {
     orderBy: {
       id: 'asc',
     },
-    skip: pageIndex * 10,
+    skip: pageIndex * 8,
     take: 8,
   });
 
