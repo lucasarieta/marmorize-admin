@@ -18,7 +18,7 @@ const navigation = [
   { name: 'Gastos', href: '/app/spendings', icon: CreditCardIcon },
 ];
 
-export default function () {
+export default function Sidebar() {
   return (
     <nav className='h-full border-r flex flex-col px-5 py-8 gap-y-8'>
       <div className='flex items-center font-semibold gap-x-3 text-gray-700'>

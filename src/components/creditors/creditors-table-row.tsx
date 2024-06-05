@@ -11,7 +11,7 @@ export interface Props {
   creditor: Creditor;
 }
 
-export default function ({ creditor }: Props) {
+export default function CreditorsTableRow({ creditor }: Props) {
   const router = useRouter();
 
   function edit() {

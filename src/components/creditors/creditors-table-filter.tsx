@@ -12,7 +12,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export default function () {
+export default function CreditorsTableFilter() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

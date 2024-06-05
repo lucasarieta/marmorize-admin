@@ -3,7 +3,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { TableCell, TableRow } from '@/components/ui/table';
 
-export default function () {
+export default function CreditorsTableSkeleton() {
   return (
     <>
       {Array.from({ length: 10 }).map((_, i) => {

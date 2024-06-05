@@ -1,4 +1,3 @@
-import { ManageCreditorFormDto } from '@/app/app/creditors/manage/page';
 import {
   FormControl,
   FormDescription,
@@ -9,13 +8,14 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { UseFormReturn } from 'react-hook-form';
+import { ManageCreditorFormDto } from './creditors-manage-form';
 
 interface Props {
   field: any;
   form: UseFormReturn<ManageCreditorFormDto>;
 }
 
-export default function ({ field, form }: Props) {
+export default function CreditorsFormInput({ field, form }: Props) {
   return (
     <FormField
       key={field.key}
