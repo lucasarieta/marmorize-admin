@@ -2,6 +2,7 @@
 
 import { createCreditor } from '@/actions/creditors/create-creditor';
 import { GetCreditorsResponseDto } from '@/actions/creditors/get-creditors';
+import { updateCreditor } from '@/actions/creditors/update-creditor';
 import { queryClient } from '@/lib/react-query';
 import { ICreditor } from '@/types/creditor';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
@@ -58,6 +59,24 @@ export default function CreditorsManageForm({ creditor, isEditing }: Props) {
   });
 
   async function submit(payload: ManageCreditorFormDto) {
+    if (isEditing) {
+      const { status, message, data } = await updateCreditor(
+        creditor.id,
+        payload
+      );
+
+      if (!data) {
+        alert(`Erro ao atualizar credor: ${message}`);
+        return;
+      }
+
+      if (status === 200) {
+        handleUpdateList(data);
+      }
+
+      return;
+    }
+
     const { status, message, data } = await createCreditor(payload);
 
     if (!data) {
@@ -66,30 +85,46 @@ export default function CreditorsManageForm({ creditor, isEditing }: Props) {
     }
 
     if (status === 201) {
-      const creditorsListCache =
-        queryClient.getQueriesData<GetCreditorsResponseDto>({
-          queryKey: ['creditors'],
-        });
+      handleUpdateList(data);
+    }
+  }
 
-      creditorsListCache.forEach(([cacheKey, cacheData]) => {
-        if (!cacheData) return;
-
-        queryClient.setQueryData(cacheKey, (query: GetCreditorsResponseDto) => {
-          if (!query) return;
-
-          const { creditors } = query;
-
-          creditors.push(data);
-
-          return {
-            ...query,
-            creditors,
-          };
-        });
+  function handleUpdateList(data: GetCreditorsResponseDto['creditors'][0]) {
+    const creditorsListCache =
+      queryClient.getQueriesData<GetCreditorsResponseDto>({
+        queryKey: ['creditors'],
       });
 
-      router.push('/app/creditors');
-    }
+    creditorsListCache.forEach(([cacheKey, cacheData]) => {
+      if (!cacheData) return;
+
+      queryClient.setQueryData(cacheKey, (query: GetCreditorsResponseDto) => {
+        if (!query) return;
+
+        let { creditors } = query;
+
+        if (isEditing) {
+          creditors = creditors.map((creditor) => {
+            if (creditor.id === data.id) {
+              return data;
+            }
+
+            return creditor;
+          });
+        } else {
+          creditors.push(data);
+        }
+
+        console.log(creditors);
+
+        return {
+          ...query,
+          creditors,
+        };
+      });
+    });
+
+    router.push('/app/creditors');
   }
 
   function handleBack() {
