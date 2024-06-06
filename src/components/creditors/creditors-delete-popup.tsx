@@ -27,10 +27,10 @@ export default function CreditorsDeletePopup({ onDelete, ...props }: Props) {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={() => props.onOpenChange(false)}>Cancelar</Button>
-          <Button onClick={onDelete} variant='destructive'>
-            Deletar
+          <Button onClick={() => props.onOpenChange(false)} variant='secondary'>
+            Cancelar
           </Button>
+          <Button onClick={onDelete}>Deletar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

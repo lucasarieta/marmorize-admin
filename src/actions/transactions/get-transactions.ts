@@ -12,16 +12,23 @@ export async function getTransactions({ daysInAWeek }: GetTransactionsDto) {
     .toISOString()
     .split('T')[0];
 
+  const greatherThan = new Date(`${firstWeekDay}T00:00:00Z`);
+  const lessThan = new Date(`${lastWeekDay}T23:59:59Z`);
+  console.log(daysInAWeek, firstWeekDay, lastWeekDay, greatherThan, lessThan);
+
   const transactions = await prisma.transaction.findMany({
     where: {
       payAt: {
-        gte: new Date(`${firstWeekDay}T00:00:00Z`), // First day of the week
-        lte: new Date(`${lastWeekDay}T23:59:59Z`), // Last day of the week
+        gte: greatherThan, // First day of the week
+        lte: lessThan, // Last day of the week
       },
+    },
+    include: {
+      creditor: true,
     },
   });
 
-  const transactionsCount = await prisma.transaction.count();
+  console.log(transactions);
 
   return {
     transactions,

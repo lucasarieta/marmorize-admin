@@ -1,8 +1,14 @@
 export function getAllDaysInAWeek() {
+  const today = new Date();
   const days = [];
 
+  // Ajuste para GMT-3 (3 horas atrás)
+  const todayBrasil = new Date(today.getTime() - 3 * 60 * 60 * 1000);
+
   for (let i = 0; i < 7; i++) {
-    days.push(new Date(new Date().setDate(new Date().getDate() + i)));
+    const day = new Date(todayBrasil);
+    day.setDate(todayBrasil.getDate() + i);
+    days.push(day);
   }
 
   return days;
@@ -27,4 +33,20 @@ export function getDaysInString(days: Date[]): {
   }
 
   return list;
+}
+
+export function formatDate(date: Date) {
+  // Return the date in format "dd/mm/yyyy às hh:mm"
+  return date.toLocaleDateString('pt-BR', {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  });
+}
+
+export function isDayWeekend(date: Date) {
+  const day = date.getDay();
+  return day === 0 || day === 6;
 }

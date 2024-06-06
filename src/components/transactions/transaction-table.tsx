@@ -11,22 +11,28 @@ import TransactionTableRow from './transaction-table-row';
 import TransactionsTableSkeleton from './transactions-table-skeleton';
 
 interface Props {
-  result?: Transaction[];
+  result?: Array<
+    Transaction & {
+      creditor: {
+        name: string;
+      };
+    }
+  >;
   date: Date;
 }
 
 export default function TransactionTable({ date, result }: Props) {
-  const noResults = result?.length === 0;
   return (
     <div>
       <div className='rounded-md border select-none'>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className='w-[140px]'>Nome</TableHead>
-              <TableHead className='w-[140px]'>Documento</TableHead>
-              <TableHead className='w-[140px]'>Tipo</TableHead>
-              <TableHead className='w-[50px]'>Ação</TableHead>
+              <TableHead className='w-[140px]'>Nome do Credor</TableHead>
+              <TableHead className='w-[140px]'>Valor</TableHead>
+              <TableHead className='w-[140px]'>Status</TableHead>
+              <TableHead className='w-[140px]'>Data de Vencimento</TableHead>
+              <TableHead className='w-[40px]'>Ação</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -53,16 +59,6 @@ export default function TransactionTable({ date, result }: Props) {
           </TableBody>
         </Table>
       </div>
-
-      {/* {result.map((transaction) => (
-        <div key={transaction.id}>
-          <div className='flex items-center gap-2'>
-            <div className='text-sm font-semibold'>{transaction.id}</div>
-            <div className='text-sm'>{transaction.amount}</div>
-          </div>
-          <div className='text-xs text-gray-500'>{transaction.operation}</div>
-        </div>
-      ))} */}
     </div>
   );
 }

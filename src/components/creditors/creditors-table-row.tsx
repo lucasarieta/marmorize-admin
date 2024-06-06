@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteCreditor } from '@/actions/creditors/delete-editor';
+import { deleteCreditor } from '@/actions/creditors/delete-creditor';
 import { GetCreditorsResponseDto } from '@/actions/creditors/get-creditors';
 import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
