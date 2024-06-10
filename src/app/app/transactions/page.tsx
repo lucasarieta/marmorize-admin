@@ -30,7 +30,7 @@ export default function Page() {
     isLoading,
     isFetching,
   } = useQuery({
-    queryKey: ['transactions'],
+    queryKey: ['transactions', filterRange],
     queryFn: () => getTransactions({ days }),
   });
 
@@ -76,7 +76,7 @@ function Weekdays({
 
   return (
     <>
-      {weekDays.map((day, index) => {
+      {weekDays.map((day) => {
         const dayTransactions = transactions?.filter((transaction) => {
           const payAtDay = transaction.payAt.toISOString().split('T')[0];
           const currentDay = day.currentDate.toISOString().split('T')[0];
