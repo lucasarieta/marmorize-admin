@@ -10,6 +10,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from '../ui/sheet';
+import TransactionFormCreditor from './transaction-form-creditor';
+import TransactionFormInput from './transaction-form-input';
 
 // TransactionType should be defined in the backend
 const schema = z.object({
@@ -31,7 +33,7 @@ const schema = z.object({
   text: z.string().optional(),
 });
 
-type CreateTransactionFormDto = z.infer<typeof schema>;
+export type CreateTransactionFormDto = z.infer<typeof schema>;
 
 interface Props extends DialogProps {}
 
@@ -46,7 +48,7 @@ export default function CreateTransaction({ ...props }: Props) {
 
   return (
     <Sheet {...props}>
-      <SheetContent>
+      <SheetContent className='flex flex-col gap-4'>
         <SheetHeader>
           <SheetTitle>Criar transação</SheetTitle>
           <SheetDescription>
@@ -58,19 +60,17 @@ export default function CreateTransaction({ ...props }: Props) {
             onSubmit={form.handleSubmit(submit)}
             className='flex flex-col gap-4'
           >
-            <h1>Form</h1>
-
             <div className='flex flex-col gap-4 w-full'>
-              {/* <FormInput
+              <TransactionFormCreditor form={form} />
+
+              <TransactionFormInput
                 field={{
                   key: 'amount',
-                  type: 'number',
                   title: 'Valor',
-                  description: 'Valor da transação',
-                  placeholder: 'Valor da transação',
+                  placeholder: 'Digite o valor da transação',
                 }}
                 form={form}
-              /> */}
+              />
             </div>
           </form>
         </Form>
