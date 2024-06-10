@@ -1,17 +1,46 @@
-export function getAllDaysInAWeek() {
+function getDatesByDays(days: number) {
   const today = new Date();
-  const days = [];
+  const _days = [];
 
-  // Ajuste para GMT-3 (3 horas atrás)
   const todayBrasil = new Date(today.getTime() - 3 * 60 * 60 * 1000);
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < days; i++) {
     const day = new Date(todayBrasil);
     day.setDate(todayBrasil.getDate() + i);
-    days.push(day);
+    _days.push(day);
   }
 
-  return days;
+  return _days;
+}
+
+export function getDateRange(days: number = 7) {
+  const daysInAWeek = getDatesByDays(days);
+
+  const from = daysInAWeek[0].toISOString().split('T')[0];
+  const to = daysInAWeek[daysInAWeek.length - 1].toISOString().split('T')[0];
+
+  return {
+    from: new Date(from),
+    to: new Date(to),
+  };
+}
+
+export function getDaysBetweenDates(from: Date, to: Date): Date[] {
+  const daysInAWeek = [];
+
+  const diffInMilliseconds = to.getTime() - from.getTime();
+  const days = Math.floor(diffInMilliseconds / (1000 * 60 * 60 * 24));
+
+  for (let i = 0; i <= days; i++) {
+    const currentDay = new Date(from.getTime() + i * (1000 * 60 * 60 * 24));
+    // GMT-3
+    const adjustedCurrentDay = new Date(
+      currentDay.getTime() + 3 * 60 * 60 * 1000
+    );
+    daysInAWeek.push(adjustedCurrentDay);
+  }
+
+  return daysInAWeek;
 }
 
 export function getDaysInString(days: Date[]): {
@@ -36,7 +65,6 @@ export function getDaysInString(days: Date[]): {
 }
 
 export function formatDate(date: Date) {
-  // Return the date in format "dd/mm/yyyy às hh:mm"
   return date.toLocaleDateString('pt-BR', {
     day: 'numeric',
     month: 'numeric',

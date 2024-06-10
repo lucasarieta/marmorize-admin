@@ -1,4 +1,4 @@
-import { Transaction } from '@prisma/client';
+import { TransactionTableRowProps } from '@/types/transactions';
 import {
   Table,
   TableBody,
@@ -11,17 +11,11 @@ import TransactionTableRow from './transaction-table-row';
 import TransactionsTableSkeleton from './transactions-table-skeleton';
 
 interface Props {
-  result?: Array<
-    Transaction & {
-      creditor: {
-        name: string;
-      };
-    }
-  >;
+  transactions?: TransactionTableRowProps;
   date: Date;
 }
 
-export default function TransactionTable({ date, result }: Props) {
+export default function TransactionTable({ date, transactions }: Props) {
   return (
     <div>
       <div className='rounded-md border select-none'>
@@ -36,17 +30,17 @@ export default function TransactionTable({ date, result }: Props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {!result && <TransactionsTableSkeleton />}
+            {!transactions && <TransactionsTableSkeleton />}
 
-            {result &&
-              result.map((transaction) => (
+            {transactions &&
+              transactions.map((transaction) => (
                 <TransactionTableRow
                   key={transaction.id}
                   transaction={transaction}
                 />
               ))}
 
-            {result && result.length === 0 && (
+            {transactions && transactions.length === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={7}

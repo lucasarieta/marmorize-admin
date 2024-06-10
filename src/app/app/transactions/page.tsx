@@ -3,17 +3,27 @@
 import { getTransactions } from '@/actions/transactions/get-transactions';
 import TransactionDayMetrics from '@/components/transactions/transaction-day-metrics';
 import TransactionTable from '@/components/transactions/transaction-table';
-import { getAllDaysInAWeek, getDaysInString, isDayWeekend } from '@/lib/days';
+import TransactionTableFilter from '@/components/transactions/transaction-table-filter';
+import { Button } from '@/components/ui/button';
+import {
+  getDateRange,
+  getDaysBetweenDates,
+  getDaysInString,
+  isDayWeekend,
+} from '@/lib/days';
+import { DateRange } from '@/types/date';
+import { TransactionTableRowProps } from '@/types/transactions';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export default function Page() {
-  const router = useRouter();
+  const [filterRange, setFilterRange] = useState<DateRange>(getDateRange(7));
 
-  const daysInAWeek = getAllDaysInAWeek();
-  const weekDays = getDaysInString(daysInAWeek);
+  const router = useRouter();
+  const days = getDaysBetweenDates(filterRange.from, filterRange.to);
 
   const {
     data: result,
@@ -21,14 +31,16 @@ export default function Page() {
     isFetching,
   } = useQuery({
     queryKey: ['transactions'],
-    queryFn: () => getTransactions({ daysInAWeek }),
+    queryFn: () => getTransactions({ days }),
   });
 
   function handleNewTransaction() {
     router.push('/app/transactions/manage/new');
   }
 
-  console.log(result);
+  function onDateFilterChange(values: DateRange) {
+    setFilterRange(values);
+  }
 
   return (
     <div className='flex flex-col gap-4'>
@@ -39,57 +51,81 @@ export default function Page() {
 
       <main className='space-y-2.5'>
         <div className='flex items-center gap-2'>
-          {/* <Button onClick={handleNewTransaction}>Nova transação</Button> */}
+          <TransactionTableFilter
+            filterRange={filterRange}
+            onDateFilterChange={onDateFilterChange}
+          />
+          <Button onClick={handleNewTransaction}>Nova transação</Button>
         </div>
 
-        {weekDays.map((day, index) => {
-          const current = result?.transactions.filter((r) => {
-            const payAtDay = r.payAt.toISOString().split('T')[0];
-            const currentDay = day.currentDate.toISOString().split('T')[0];
-
-            return payAtDay === currentDay;
-          });
-
-          const isWeekend = isDayWeekend(day.currentDate);
-
-          return (
-            <div
-              className='flex flex-col gap-2'
-              key={day.currentDate.toString()}
-            >
-              <div
-                className={twMerge(
-                  'flex items-center gap-2  p-4 rounded-md ',
-                  'bg-zinc-100 border border-zinc-200',
-                  isWeekend && 'opacity-50'
-                )}
-              >
-                <h1>{day.text}</h1>
-
-                {index === 0 && (
-                  <span className='text-sm py-0.5 px-3 bg-green-600/20 text-green-700 rounded-full'>
-                    Hoje
-                  </span>
-                )}
-
-                {isWeekend && (
-                  <span className='text-sm py-0.5 px-3 bg-yellow-600/20 text-yellow-700 rounded-full'>
-                    Fim de Semana
-                  </span>
-                )}
-              </div>
-
-              {current && current.length > 0 && (
-                <TransactionTable result={current} date={day.currentDate} />
-              )}
-
-              {current && current.length > 0 && (
-                <TransactionDayMetrics result={current} />
-              )}
-            </div>
-          );
-        })}
+        <Weekdays range={filterRange} transactions={result?.transactions} />
       </main>
     </div>
+  );
+}
+
+function Weekdays({
+  range,
+  transactions,
+}: {
+  range: DateRange;
+  transactions: TransactionTableRowProps;
+}) {
+  const days = getDaysBetweenDates(range.from, range.to);
+  const weekDays = getDaysInString(days);
+
+  return (
+    <>
+      {weekDays.map((day, index) => {
+        const dayTransactions = transactions?.filter((transaction) => {
+          const payAtDay = transaction.payAt.toISOString().split('T')[0];
+          const currentDay = day.currentDate.toISOString().split('T')[0];
+
+          return payAtDay === currentDay;
+        });
+
+        const isWeekend = isDayWeekend(day.currentDate);
+        const isToday =
+          new Date().toISOString().split('T')[0] ===
+          day.currentDate.toISOString().split('T')[0];
+
+        return (
+          <div className='flex flex-col gap-2' key={day.currentDate.toString()}>
+            <div
+              className={twMerge(
+                'flex items-center gap-2  p-4 rounded-md ',
+                'bg-zinc-100 border border-zinc-200',
+                isWeekend && 'opacity-50'
+              )}
+            >
+              <h1>{day.text}</h1>
+
+              {isToday && (
+                <span className='text-sm py-0.5 px-3 bg-green-600/20 text-green-700 rounded-full'>
+                  Hoje
+                </span>
+              )}
+
+              {isWeekend && (
+                <span className='text-sm py-0.5 px-3 bg-yellow-600/20 text-yellow-700 rounded-full'>
+                  Fim de Semana
+                </span>
+              )}
+            </div>
+
+            {dayTransactions && dayTransactions.length > 0 && (
+              <TransactionTable
+                transactions={dayTransactions}
+                date={day.currentDate}
+              />
+            )}
+
+            {dayTransactions && dayTransactions.length > 0 && (
+              <TransactionDayMetrics transactions={dayTransactions} />
+            )}
+          </div>
+        );
+      })}
+    </>
   );
 }

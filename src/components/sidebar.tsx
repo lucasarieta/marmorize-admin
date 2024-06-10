@@ -13,7 +13,7 @@ import { usePathname } from 'next/navigation';
 import { twMerge } from 'tailwind-merge';
 
 const navigation = [
-  { name: 'Overview', href: '/app', icon: HomeIcon },
+  { name: 'Dashboard', href: '/app', icon: HomeIcon },
   { name: 'Credores', href: '/app/creditors', icon: UsersIcon },
   { name: 'Transações', href: '/app/transactions', icon: CreditCardIcon },
 ];

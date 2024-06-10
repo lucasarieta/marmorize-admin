@@ -1,45 +1,42 @@
-import { Transaction } from '@prisma/client';
+import { TransactionTableRowProps } from '@/types/transactions';
 import { twMerge } from 'tailwind-merge';
 
 interface Props {
-  result?: Array<
-    Transaction & {
-      creditor: {
-        name: string;
-      };
-    }
-  >;
+  transactions?: TransactionTableRowProps;
 }
 
-export default function TransactionDayMetrics({ result }: Props) {
-  console.log('asd', result);
-  const totalSpent = result?.reduce((acc, r) => {
-    if (r.operation === 'DEBIT') {
-      return acc + r.amount;
+export default function TransactionDayMetrics({ transactions }: Props) {
+  const totalSpent = transactions?.reduce((acc, transaction) => {
+    if (transaction.operation === 'DEBIT') {
+      return acc + transaction.amount;
     }
 
     return acc;
   }, 0);
 
-  const totalReceived = result?.reduce((acc, r) => {
-    if (r.operation === 'CREDIT') {
-      return acc + r.amount;
+  const totalReceived = transactions?.reduce((acc, transaction) => {
+    if (transaction.operation === 'CREDIT') {
+      return acc + transaction.amount;
     }
 
     return acc;
   }, 0);
 
-  const totalAmount = totalSpent + totalReceived;
+  const totalAmount = totalReceived - totalSpent;
 
   return (
     <div className='flex flex-col items-center gap-2 w-full border border-zinc-200 rounded-md'>
       <div className='flex justify-between items-center w-full border-b border-zinc-200 p-2'>
-        <h1>Total Recebido</h1>
-        <span>{totalReceived}</span>
+        <h1>Métricas do dia</h1>
       </div>
 
       <div className='flex justify-between items-center w-full border-b border-zinc-200 p-2'>
-        <h1>Total Gasto</h1>
+        <h1>Entrada</h1>
+        <span>+{totalReceived}</span>
+      </div>
+
+      <div className='flex justify-between items-center w-full border-b border-zinc-200 p-2'>
+        <h1>Saída</h1>
         <span>-{totalSpent}</span>
       </div>
 

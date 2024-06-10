@@ -5,3 +5,11 @@ export interface GetTransactionsResponseDto extends Array<Transaction> {
     name: string;
   }[];
 }
+
+export type TransactionTableRowProps = Array<
+  Transaction & {
+    creditor: {
+      name: string;
+    };
+  }
+>;
