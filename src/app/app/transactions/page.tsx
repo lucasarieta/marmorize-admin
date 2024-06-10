@@ -1,6 +1,7 @@
 'use client';
 
 import { getTransactions } from '@/actions/transactions/get-transactions';
+import CreateTransaction from '@/components/transactions/create-transaction';
 import TransactionDayMetrics from '@/components/transactions/transaction-day-metrics';
 import TransactionTable from '@/components/transactions/transaction-table';
 import TransactionTableFilter from '@/components/transactions/transaction-table-filter';
@@ -15,27 +16,24 @@ import { DateRange } from '@/types/date';
 import { TransactionTableRowProps } from '@/types/transactions';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export default function Page() {
   const [filterRange, setFilterRange] = useState<DateRange>(getDateRange(7));
+  const [isCreatingTransaction, setIsCreatingTransaction] = useState(false);
 
-  const router = useRouter();
-  const days = getDaysBetweenDates(filterRange.from, filterRange.to);
+  const days = useMemo(() => {
+    return getDaysBetweenDates(filterRange.from, filterRange.to);
+  }, [filterRange]);
 
-  const {
-    data: result,
-    isLoading,
-    isFetching,
-  } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ['transactions', filterRange],
     queryFn: () => getTransactions({ days }),
   });
 
   function handleNewTransaction() {
-    router.push('/app/transactions/manage/new');
+    setIsCreatingTransaction(true);
   }
 
   function onDateFilterChange(values: DateRange) {
@@ -58,8 +56,13 @@ export default function Page() {
           <Button onClick={handleNewTransaction}>Nova transação</Button>
         </div>
 
-        <Weekdays range={filterRange} transactions={result?.transactions} />
+        <Weekdays range={filterRange} transactions={data?.transactions} />
       </main>
+
+      <CreateTransaction
+        open={isCreatingTransaction}
+        onOpenChange={(open) => setIsCreatingTransaction(open)}
+      />
     </div>
   );
 }

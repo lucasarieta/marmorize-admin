@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '../ui/table';
 import TransactionTableRow from './transaction-table-row';
-import TransactionsTableSkeleton from './transactions-table-skeleton';
+import TransactionTableSkeleton from './transaction-table-skeleton';
 
 interface Props {
   transactions?: TransactionTableRowProps;
@@ -30,7 +30,7 @@ export default function TransactionTable({ date, transactions }: Props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {!transactions && <TransactionsTableSkeleton />}
+            {!transactions && <TransactionTableSkeleton />}
 
             {transactions &&
               transactions.map((transaction) => (
