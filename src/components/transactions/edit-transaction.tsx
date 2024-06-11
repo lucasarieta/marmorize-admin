@@ -156,11 +156,11 @@ export default function EditTransaction({ transaction, ...props }: Props) {
                   options: [
                     {
                       value: 'CREDIT',
-                      label: 'Ganho',
+                      label: 'Crédito',
                     },
                     {
                       value: 'DEBIT',
-                      label: 'Gasto',
+                      label: 'Débido',
                     },
                   ],
                 }}

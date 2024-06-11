@@ -122,11 +122,11 @@ export default function CreateTransaction({ ...props }: Props) {
                   options: [
                     {
                       value: 'CREDIT',
-                      label: 'Ganho',
+                      label: 'Crédito',
                     },
                     {
                       value: 'DEBIT',
-                      label: 'Gasto',
+                      label: 'Débido',
                     },
                   ],
                 }}

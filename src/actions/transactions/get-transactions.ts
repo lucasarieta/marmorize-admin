@@ -20,6 +20,10 @@ export async function getTransactions({ days }: GetTransactionsDto) {
         lte: lessThan, // Last day of the week
       },
     },
+    // TODO
+    orderBy: {
+      id: 'desc',
+    },
     include: {
       creditor: true,
     },
