@@ -1,5 +1,6 @@
-import { createTransaction } from '@/actions/transactions/create-transaction';
+import { updateTransaction } from '@/actions/transactions/update-transaction';
 import { queryClient } from '@/lib/react-query';
+import { TransactionWithCreditor } from '@/types/transactions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogProps } from '@radix-ui/react-dialog';
 import { LoaderIcon } from 'lucide-react';
@@ -40,34 +41,46 @@ const schema = z.object({
     required_error: 'O operação é obrigatório',
   }),
   transactionType: z.string().default('Boleto'),
+  status: z.enum(['PENDING', 'PAID'], {
+    required_error: 'O status é obrigatório',
+  }),
   expiresAt: z.date({ required_error: 'O prazo de vencimento é obrigatório' }),
+  payAt: z.date({ required_error: 'O prazo de pagamento é obrigatório' }),
   text: z.string().optional(),
 });
 
-export type CreateTransactionFormDto = z.infer<typeof schema>;
+export type EditTransactionFormDto = z.infer<typeof schema>;
 
-interface Props extends DialogProps {}
+interface Props extends DialogProps {
+  transaction: TransactionWithCreditor;
+}
 
-export default function CreateTransaction({ ...props }: Props) {
-  const form = useForm<CreateTransactionFormDto>({
+export default function EditTransaction({ transaction, ...props }: Props) {
+  const form = useForm<EditTransactionFormDto>({
     resolver: zodResolver(schema),
     defaultValues: {
-      amount: 0,
-      operation: 'CREDIT',
-      transactionType: 'Boleto',
+      creditorId: transaction.creditor?.id,
+      amount: transaction.amount,
+      operation: transaction.operation,
+      status: transaction.status,
+      transactionType: transaction.transactionType,
+      expiresAt: transaction.expiresAt,
+      payAt: transaction.payAt,
+      text: transaction.text ?? '',
     },
+    reValidateMode: 'onChange',
   });
 
-  async function submit(payload: CreateTransactionFormDto) {
+  async function submit(payload: EditTransactionFormDto) {
+    console.log(payload);
     try {
-      await createTransaction(payload);
+      await updateTransaction({ id: transaction.id, ...payload });
       handleUpdateTransactions();
       props.onOpenChange(false);
-      form.reset();
 
-      toast.success('Transação criada com sucesso');
+      toast.success('Transação editada com sucesso');
     } catch (error) {
-      toast.error('Erro ao criar transação');
+      toast.error('Erro ao editar transação');
     }
   }
 
@@ -81,9 +94,9 @@ export default function CreateTransaction({ ...props }: Props) {
     <Sheet {...props}>
       <SheetContent className='flex flex-col gap-4'>
         <SheetHeader>
-          <SheetTitle>Criar transação</SheetTitle>
+          <SheetTitle>Editar transação</SheetTitle>
           <SheetDescription>
-            Registre uma nova transação no seu registro de transações.
+            Edite a transação no seu registro de transações.
           </SheetDescription>
         </SheetHeader>
         <Form {...form}>
@@ -92,7 +105,10 @@ export default function CreateTransaction({ ...props }: Props) {
             className='flex flex-col gap-4'
           >
             <div className='flex flex-col gap-4 w-full'>
-              <TransactionFormCreditor form={form} />
+              <TransactionFormCreditor
+                creditorId={transaction.creditor.id}
+                form={form}
+              />
 
               <TransactionFormInput
                 field={{
@@ -110,6 +126,25 @@ export default function CreateTransaction({ ...props }: Props) {
                   type: 'text',
                   title: 'Tipo de transação',
                   placeholder: 'Digite o tipo da transação',
+                }}
+                form={form}
+              />
+
+              <TransactionFormSelect
+                field={{
+                  key: 'status',
+                  title: 'Status',
+                  placeholder: 'Selecione o status da transação',
+                  options: [
+                    {
+                      value: 'PENDING',
+                      label: 'Pendente',
+                    },
+                    {
+                      value: 'PAID',
+                      label: 'Pago',
+                    },
+                  ],
                 }}
                 form={form}
               />
@@ -142,6 +177,15 @@ export default function CreateTransaction({ ...props }: Props) {
                 form={form}
               />
 
+              <TransactionFormCalendar
+                field={{
+                  key: 'payAt',
+                  title: 'Data de pagamento',
+                  placeholder: 'Selecione a data de pagamento',
+                }}
+                form={form}
+              />
+
               <FormField
                 control={form.control}
                 name='text'
@@ -168,7 +212,7 @@ export default function CreateTransaction({ ...props }: Props) {
               {form.formState.isSubmitting && (
                 <LoaderIcon className='animate-spin w-4 h-4' />
               )}
-              Criar nova transação
+              Salvar transação
             </Button>
           </form>
         </Form>

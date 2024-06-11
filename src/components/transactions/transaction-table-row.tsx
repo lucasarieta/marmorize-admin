@@ -3,16 +3,12 @@
 import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { formatDate } from '@/lib/days';
-import { PencilIcon } from '@heroicons/react/24/outline';
-import { Transaction, TransactionStatus } from '@prisma/client';
-import { useRouter } from 'next/navigation';
+import { TransactionWithCreditor } from '@/types/transactions';
+import { CogIcon } from '@heroicons/react/24/outline';
+import { TransactionStatus } from '@prisma/client';
+import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
-
-type TransactionWithCreditor = Transaction & {
-  creditor: {
-    name: string;
-  };
-};
+import EditTransaction from './edit-transaction';
 
 export interface Props {
   transaction: TransactionWithCreditor;
@@ -30,10 +26,10 @@ function castStatus(status: TransactionStatus) {
 }
 
 export default function TransactionTableRow({ transaction }: Props) {
-  const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
 
   function handleEdit() {
-    router.push(`/app/creditors/manage/${transaction.id}`);
+    setIsEditing(true);
   }
 
   return (
@@ -52,7 +48,7 @@ export default function TransactionTableRow({ transaction }: Props) {
             )}
           >
             {transaction.operation === 'CREDIT' ? '+' : '-'}
-            {transaction.amount}
+            R${transaction.amount}
           </span>
         </TableCell>
 
@@ -73,11 +69,17 @@ export default function TransactionTableRow({ transaction }: Props) {
         </TableCell>
 
         <TableCell className='flex items-center gap-2'>
-          <Button onClick={handleEdit} size='sm'>
-            <PencilIcon className='w-4 h-4' />
+          <Button variant='secondary' onClick={handleEdit} size='sm'>
+            <CogIcon className='w-5 h-5' />
           </Button>
         </TableCell>
       </TableRow>
+
+      <EditTransaction
+        open={isEditing}
+        onOpenChange={setIsEditing}
+        transaction={transaction}
+      />
     </>
   );
 }

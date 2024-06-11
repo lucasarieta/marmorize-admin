@@ -26,7 +26,7 @@ export default function TransactionTable({ date, transactions }: Props) {
               <TableHead className='w-[140px]'>Valor</TableHead>
               <TableHead className='w-[140px]'>Status</TableHead>
               <TableHead className='w-[140px]'>Data de Vencimento</TableHead>
-              <TableHead className='w-[40px]'>Ação</TableHead>
+              <TableHead className='w-[50px]'>Ação</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

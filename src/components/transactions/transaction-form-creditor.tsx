@@ -26,10 +26,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { CreateTransactionFormDto } from './create-transaction';
 
 interface Props {
+  creditorId?: string;
   form: UseFormReturn<CreateTransactionFormDto>;
 }
 
-export default function TransactionFormCreditor({ form }: Props) {
+export default function TransactionFormCreditor({ creditorId, form }: Props) {
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 300);
 

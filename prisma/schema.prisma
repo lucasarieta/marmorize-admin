@@ -21,16 +21,6 @@ enum CreditorType {
   OTHER
 }
 
-enum TransactionStatus {
-  PENDING
-  PAID
-}
-
-enum TransactionOperations {
-  CREDIT
-  DEBIT
-}
-
 model Creditor {
   id           String       @id @default(cuid())
   name         String
@@ -42,6 +32,16 @@ model Creditor {
   Transaction Transaction[]
 
   @@map("creditors")
+}
+
+enum TransactionStatus {
+  PENDING
+  PAID
+}
+
+enum TransactionOperations {
+  CREDIT
+  DEBIT
 }
 
 model Transaction {
