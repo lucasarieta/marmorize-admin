@@ -21,14 +21,26 @@ export default function TransactionFormInput({ field, form }: Props) {
       control={form.control}
       name={field.key}
       render={() => (
-        <FormItem className='flex items-center gap-16 w-full'>
+        <FormItem className='flex flex-col gap-2 w-full'>
           <FormLabel>{field.title}</FormLabel>
-
           <FormControl>
-            <Input
-              placeholder={field.placeholder}
-              {...form.register(field.key)}
-            />
+            <>
+              {field.type === 'text' && (
+                <Input
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  {...form.register(field.key)}
+                />
+              )}
+
+              {field.type === 'number' && (
+                <Input
+                  type={'text'}
+                  placeholder={field.placeholder}
+                  {...form.register(field.key, { valueAsNumber: true })}
+                />
+              )}
+            </>
           </FormControl>
 
           <FormMessage className='text-xs' />

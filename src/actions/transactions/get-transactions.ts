@@ -12,7 +12,6 @@ export async function getTransactions({ days }: GetTransactionsDto) {
 
   const greatherThan = new Date(`${firstWeekDay}T00:00:00Z`);
   const lessThan = new Date(`${lastWeekDay}T23:59:59Z`);
-  console.log(days, firstWeekDay, lastWeekDay, greatherThan, lessThan);
 
   const transactions = await prisma.transaction.findMany({
     where: {
@@ -25,8 +24,6 @@ export async function getTransactions({ days }: GetTransactionsDto) {
       creditor: true,
     },
   });
-
-  console.log(transactions);
 
   return {
     transactions,

@@ -28,7 +28,7 @@ export default function Page() {
   }, [filterRange]);
 
   const { data, isFetching } = useQuery({
-    queryKey: ['transactions', filterRange],
+    queryKey: ['transactions:list', filterRange],
     queryFn: () => getTransactions({ days }),
   });
 
@@ -53,7 +53,9 @@ export default function Page() {
             filterRange={filterRange}
             onDateFilterChange={onDateFilterChange}
           />
-          <Button onClick={handleNewTransaction}>Nova transação</Button>
+          <Button className='ml-auto' onClick={handleNewTransaction}>
+            Nova transação
+          </Button>
         </div>
 
         <Weekdays range={filterRange} transactions={data?.transactions} />

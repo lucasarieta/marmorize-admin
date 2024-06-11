@@ -7,7 +7,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Check, ChevronsUpDown, LoaderIcon } from 'lucide-react';
 import { useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { Button } from '../ui/button';
 import {
   Command,
   CommandEmpty,
@@ -37,12 +36,12 @@ export default function TransactionFormCreditor({ form }: Props) {
   const { data, isFetching } = useQuery({
     queryKey: ['creditors', debouncedSearchText],
     queryFn: () => getCreditorsByName(debouncedSearchText.toLowerCase()),
-    enabled: !!debouncedSearchText,
     staleTime: Infinity,
   });
 
   function onSearchTextChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchText(event.target.value);
+    form.setValue('creditorId', null);
   }
 
   return (
@@ -50,25 +49,24 @@ export default function TransactionFormCreditor({ form }: Props) {
       control={form.control}
       name='creditorId'
       render={({ field }) => (
-        <FormItem className='flex items-center justify-between'>
-          <FormLabel className='w-40'>Credor</FormLabel>
+        <FormItem className='flex flex-col gap-2'>
+          <FormLabel>Credor</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>
-                <Button
-                  variant='outline'
+                <button
                   role='combobox'
                   className={cn(
-                    'w-full',
+                    'w-full flex items-center justify-between h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                     !field.value && 'text-muted-foreground'
                   )}
                 >
-                  {field.value
+                  {field.value && data?.length > 0
                     ? data?.find((creditor) => creditor.id === field.value)
                         ?.name
                     : 'Nome do credor...'}
                   <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
-                </Button>
+                </button>
               </FormControl>
             </PopoverTrigger>
             <PopoverContent className='w-[200px] p-0'>
@@ -111,7 +109,7 @@ export default function TransactionFormCreditor({ form }: Props) {
               </Command>
             </PopoverContent>
           </Popover>
-          <FormMessage />
+          <FormMessage className='text-xs' />
         </FormItem>
       )}
     />
