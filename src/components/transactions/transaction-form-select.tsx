@@ -20,7 +20,7 @@ interface Props {
   form: UseFormReturn<CreateTransactionFormDto>;
 }
 
-export default function ({ field, form }: Props) {
+export default function TransactionFormSelect({ field, form }: Props) {
   return (
     <FormField
       key={field.key}

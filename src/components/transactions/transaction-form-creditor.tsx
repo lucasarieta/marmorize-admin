@@ -56,7 +56,7 @@ export default function TransactionFormCreditor({ creditorId, form }: Props) {
             <PopoverTrigger asChild>
               <FormControl>
                 <button
-                  role='combobox'
+                  // role='combobox'
                   className={cn(
                     'w-full flex items-center justify-between h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                     !field.value && 'text-muted-foreground'
