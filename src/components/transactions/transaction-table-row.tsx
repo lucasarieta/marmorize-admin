@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { formatDate } from '@/lib/days';
 import { TransactionWithCreditor } from '@/types/transactions';
-import { CogIcon } from '@heroicons/react/24/outline';
+import { CogIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { TransactionStatus } from '@prisma/client';
 import { useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 import EditTransaction from './edit-transaction';
+import TransactionDeletePopup from './transaction-delete-popup';
 
 export interface Props {
   transaction: TransactionWithCreditor;
@@ -27,9 +28,14 @@ function castStatus(status: TransactionStatus) {
 
 export default function TransactionTableRow({ transaction }: Props) {
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
 
   function handleEdit() {
     setIsEditing(true);
+  }
+
+  function handleDelete() {
+    setShowDeletePopup(true);
   }
 
   return (
@@ -72,6 +78,10 @@ export default function TransactionTableRow({ transaction }: Props) {
           <Button variant='secondary' onClick={handleEdit} size='sm'>
             <CogIcon className='w-5 h-5' />
           </Button>
+
+          <Button variant='destructive' onClick={handleDelete} size='sm'>
+            <TrashIcon className='w-5 h-5' />
+          </Button>
         </TableCell>
       </TableRow>
 
@@ -79,6 +89,12 @@ export default function TransactionTableRow({ transaction }: Props) {
         open={isEditing}
         onOpenChange={setIsEditing}
         transaction={transaction}
+      />
+
+      <TransactionDeletePopup
+        open={showDeletePopup}
+        onOpenChange={setShowDeletePopup}
+        transactionId={transaction.id}
       />
     </>
   );

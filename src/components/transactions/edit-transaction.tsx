@@ -72,7 +72,6 @@ export default function EditTransaction({ transaction, ...props }: Props) {
   });
 
   async function submit(payload: EditTransactionFormDto) {
-    console.log(payload);
     try {
       await updateTransaction({ id: transaction.id, ...payload });
       handleUpdateTransactions();
